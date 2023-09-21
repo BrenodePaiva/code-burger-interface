@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
+import { Switch, Route, HashRouter as Router } from 'react-router-dom'
 
 import paths from '../constants/paths'
 import { Admin, Cart, Home, Login, Products, Register } from '../containers'
