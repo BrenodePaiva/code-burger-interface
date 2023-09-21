@@ -2,7 +2,15 @@ import React from 'react'
 import { Switch, Route, HashRouter as Router } from 'react-router-dom'
 
 import paths from '../constants/paths'
-import { Admin, Cart, Home, Login, Products, Register } from '../containers'
+import {
+  Admin,
+  Cart,
+  Home,
+  Login,
+  PageNotFound,
+  Products,
+  Register
+} from '../containers'
 import PriveteRountes from './private-route'
 
 function Routes() {
@@ -19,6 +27,8 @@ function Routes() {
         <PriveteRountes path={paths.Products} component={Admin} isAdmin />
         <PriveteRountes path={paths.NewProduct} component={Admin} isAdmin />
         <PriveteRountes path={paths.EditProduct} component={Admin} isAdmin />
+
+        <Route path="*" component={PageNotFound} />
       </Switch>
     </Router>
   )
