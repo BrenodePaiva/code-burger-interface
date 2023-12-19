@@ -36,7 +36,7 @@ function ListProducts() {
   }
 
   function editProduct(product) {
-    push(paths.EditProduct, { product })
+    push({ pathname: paths.EditProduct, state: { product } })
   }
 
   return (
