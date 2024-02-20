@@ -65,40 +65,44 @@ export function Login() {
 
   return (
     <Container>
-      <LoginImage src={LoginImg} alt="Imagem-burger" />
-      <ContainerItens>
-        <img src={Logo} alt="logo-code-burger" />
-        <h1>Login</h1>
+      {LoginImage && (
+        <>
+          <LoginImage src={LoginImg} alt="Imagem-burger" />
+          <ContainerItens>
+            <img src={Logo} alt="logo-code-burger" />
+            <h1>Login</h1>
 
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>E-mail</Label>
-          <Input
-            type="email"
-            {...register('email')}
-            className={errors.email?.message}
-          />
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+            <form noValidate onSubmit={handleSubmit(onSubmit)}>
+              <Label>E-mail</Label>
+              <Input
+                type="email"
+                {...register('email')}
+                className={errors.email?.message}
+              />
+              <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-          <Label>Senha</Label>
-          <Input
-            type="password"
-            {...register('password')}
-            className={errors.password?.message}
-          />
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+              <Label>Senha</Label>
+              <Input
+                type="password"
+                {...register('password')}
+                className={errors.password?.message}
+              />
+              <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-          <Button type="submit" style={{ margin: '75px 0 25px' }}>
-            Sign In
-          </Button>
-        </form>
+              <Button type="submit" style={{ margin: '75px 0 25px' }}>
+                Sign In
+              </Button>
+            </form>
 
-        <SignInLink>
-          Não possui conta?{' '}
-          <Link to="/cadastro" style={{ color: '#fff' }}>
-            Sign Up
-          </Link>
-        </SignInLink>
-      </ContainerItens>
+            <SignInLink>
+              Não possui conta?{' '}
+              <Link to="/cadastro" style={{ color: '#fff' }}>
+                Sign Up
+              </Link>
+            </SignInLink>
+          </ContainerItens>
+        </>
+      )}
     </Container>
   )
 }
