@@ -64,15 +64,19 @@ export function Login() {
     }, 500)
   }
 
-  const imgElement = document.getElementById('image')
-  imgElement.onload = () => {
+  // const imgElement = document.getElementById('image')
+  // imgElement.onload = () => {
+  //   setImgLoad(true)
+  //   console.log(imgLoad)
+  // }
+
+  const onLoad = () => {
     setImgLoad(true)
-    console.log(imgLoad)
   }
 
   return (
     <Container>
-      <LoginImage src={LoginImg} alt="Imagem-burger" id="image" />
+      <LoginImage src={LoginImg} alt="Imagem-burger" onLoad={onLoad} />
       {imgLoad && (
         <ContainerItens>
           <img src={Logo} alt="logo-code-burger" />
