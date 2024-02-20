@@ -64,12 +64,6 @@ export function Login() {
     }, 500)
   }
 
-  // const imgElement = document.getElementById('image')
-  // imgElement.onload = () => {
-  //   setImgLoad(true)
-  //   console.log(imgLoad)
-  // }
-
   const onLoad = () => {
     setImgLoad(true)
   }

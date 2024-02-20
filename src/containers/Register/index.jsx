@@ -67,13 +67,13 @@ export function Register() {
     }
   }
 
-  RegisterImage.onload = () => {
+  const onLoad = () => {
     setImgLoad(true)
   }
 
   return (
     <Container>
-      <RegisterImage src={RegisterImg} alt="Imagem-burger" />
+      <RegisterImage src={RegisterImg} alt="Imagem-burger" onLoad={onLoad} />
       {imgLoad && (
         <ContainerItens>
           <img src={Logo} alt="logo-code-burger" />
