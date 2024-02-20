@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -19,6 +19,7 @@ import {
 } from './styles'
 
 export function Register() {
+  const [imgLoad, setImgLoad] = useState(false)
   const schema = Yup.object().shape({
     name: Yup.string().required('O nome é obrigatório'),
     email: Yup.string()
@@ -66,54 +67,60 @@ export function Register() {
     }
   }
 
+  RegisterImage.onload = () => {
+    setImgLoad(true)
+  }
+
   return (
     <Container>
       <RegisterImage src={RegisterImg} alt="Imagem-burger" />
-      <ContainerItens>
-        <img src={Logo} alt="logo-code-burger" />
-        <h1>Cadastre-se</h1>
+      {imgLoad && (
+        <ContainerItens>
+          <img src={Logo} alt="logo-code-burger" />
+          <h1>Cadastre-se</h1>
 
-        <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label className={errors.name?.message}>Nome</Label>
-          <Input {...register('name')} className={errors.name?.message} />
-          <ErrorMessage>{errors.name?.message}</ErrorMessage>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Label className={errors.name?.message}>Nome</Label>
+            <Input {...register('name')} className={errors.name?.message} />
+            <ErrorMessage>{errors.name?.message}</ErrorMessage>
 
-          <Label className={errors.name?.message}>E-mail</Label>
-          <Input
-            type="email"
-            {...register('email')}
-            className={errors.email?.message}
-          />
-          <ErrorMessage>{errors.email?.message}</ErrorMessage>
+            <Label className={errors.name?.message}>E-mail</Label>
+            <Input
+              type="email"
+              {...register('email')}
+              className={errors.email?.message}
+            />
+            <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-          <Label className={errors.name?.message}>Senha</Label>
-          <Input
-            type="password"
-            {...register('password')}
-            className={errors.password?.message}
-          />
-          <ErrorMessage>{errors.password?.message}</ErrorMessage>
+            <Label className={errors.name?.message}>Senha</Label>
+            <Input
+              type="password"
+              {...register('password')}
+              className={errors.password?.message}
+            />
+            <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-          <Label className={errors.name?.message}>Confirmar Senha</Label>
-          <Input
-            type="password"
-            {...register('confirmPassword')}
-            className={errors.confirmPassword?.message}
-          />
-          <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+            <Label className={errors.name?.message}>Confirmar Senha</Label>
+            <Input
+              type="password"
+              {...register('confirmPassword')}
+              className={errors.confirmPassword?.message}
+            />
+            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
 
-          <Button type="submit" style={{ margin: '25px 0' }}>
-            Sign Up
-          </Button>
-        </form>
+            <Button type="submit" style={{ margin: '25px 0' }}>
+              Sign Up
+            </Button>
+          </form>
 
-        <SignInLink>
-          Já possui conta?{' '}
-          <Link to="/login" style={{ color: '#fff' }}>
-            Sign Ip
-          </Link>
-        </SignInLink>
-      </ContainerItens>
+          <SignInLink>
+            Já possui conta?{' '}
+            <Link to="/login" style={{ color: '#fff' }}>
+              Sign In
+            </Link>
+          </SignInLink>
+        </ContainerItens>
+      )}
     </Container>
   )
 }
