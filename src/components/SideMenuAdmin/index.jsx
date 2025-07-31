@@ -1,36 +1,68 @@
 import LogoutIcon from '@mui/icons-material/Logout'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useUser } from '../../hooks/UserContext'
 import listLinks from './menu-list'
-import { Container, ItemContainer, ListLink } from './styles'
+import {
+  ArrowIcon,
+  Container,
+  ItemContainer,
+  ListLink,
+  UserBox,
+  UserIconStyled,
+  UserInfo
+} from './styles'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 export function SideMenuAdmin({ path }) {
   const { logout } = useUser()
+  const [mobile, setMobile] = useState(false)
+  const history = useHistory()
+
+  const handleNavMobile = () => {
+    !mobile ? setMobile(true) : setMobile(false)
+  }
+
+  const logoutUser = () => {
+    logout()
+    history.replace('/login')
+  }
 
   return (
-    <Container>
-      <hr></hr>
-      {listLinks.map(item => (
-        <ItemContainer key={item.id} isActive={path === item.link}>
-          <item.icon className="icon" />
-          <ListLink to={item.link}> {item.label} </ListLink>
-        </ItemContainer>
-      ))}
+    <Container data-is-mobile={mobile}>
+      <div className="warp-arrow" onClick={handleNavMobile}>
+        <span className="arrow">
+          <ArrowIcon fontSize="large" />
+        </span>
+      </div>
+      <div className="warp" data-is-mobile={mobile}>
+        <UserBox onClick={() => history.push('/user-edit')}>
+          <UserIconStyled />
+          <UserInfo>
+            Breno de paica da silva
+            <span>Admin</span>
+          </UserInfo>
+        </UserBox>
 
-      <hr></hr>
-      <ItemContainer
-        style={{
-          position: 'fixed',
-          bottom: 30 /*, width: 'calc(100% - 16px)' */
-        }}
-      >
-        <LogoutIcon style={{ color: '#fff' }} />
-        <ListLink to="/login" onClick={logout}>
-          Sair
-        </ListLink>
-      </ItemContainer>
+        <hr></hr>
+        {listLinks.map(item => (
+          <ItemContainer
+            key={item.id}
+            isActive={path === item.link}
+            to={item.link}
+          >
+            <item.icon className="icon" />
+            <ListLink> {item.label} </ListLink>
+          </ItemContainer>
+        ))}
+
+        <hr></hr>
+        <ItemContainer too="/login" onClick={logoutUser}>
+          <LogoutIcon style={{ color: '#e83b31' }} />
+          <ListLink className="log-out">Sair</ListLink>
+        </ItemContainer>
+      </div>
     </Container>
   )
 }

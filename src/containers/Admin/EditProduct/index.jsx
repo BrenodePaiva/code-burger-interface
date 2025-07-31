@@ -7,7 +7,7 @@ import ReactSelect from 'react-select'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import { ErrorMessage } from '../../../components'
+import { ErrorMessage, LoadScreen } from '../../../components'
 import paths from '../../../constants/paths'
 import api from '../../../services/api'
 import {
@@ -22,6 +22,7 @@ import {
 function EditProduct() {
   const [fileName, setFileName] = useState(null)
   const [categories, setContegories] = useState([])
+  const [load, setLoad] = useState(false)
   const {
     push,
     location: {
@@ -62,19 +63,28 @@ function EditProduct() {
     productFormatData.append('category_id', data.category.id)
     productFormatData.append('offer', data.offer)
 
-    await toast.promise(api.put(`products/${product.id}`, productFormatData), {
-      pending: 'Editando produto....',
-      success: 'Produto editado com sucesso',
-      error: 'Falha ao editar o produto'
-    })
+    try {
+      setLoad(true)
+      await toast.promise(
+        api.put(`products/${product.id}`, productFormatData),
+        {
+          pending: 'Editando produto....',
+          success: 'Produto editado com sucesso',
+          error: 'Falha ao editar o produto'
+        }
+      )
 
-    setTimeout(() => {
-      push(paths.Products)
-    }, 900)
+      setTimeout(() => {
+        push(paths.Products)
+      }, 900)
+    } finally {
+      setLoad(false)
+    }
   }
 
   return (
     <Container>
+      {load && <LoadScreen />}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <Label>Nome</Label>
@@ -90,6 +100,7 @@ function EditProduct() {
           <Label>Preço</Label>
           <Input
             type="number"
+            step={0.01}
             {...register('price')}
             defaultValue={product.price}
           />

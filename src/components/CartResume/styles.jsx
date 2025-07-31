@@ -1,4 +1,11 @@
 import styled from 'styled-components'
+import breakPoints from '../../styles/breakPoints'
+
+export const Warp = styled.div`
+  @media ${breakPoints.big} {
+    width: 256px;
+  }
+`
 
 export const Container = styled.div`
   background-color: #fff;

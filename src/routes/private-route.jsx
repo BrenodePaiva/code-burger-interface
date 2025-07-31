@@ -17,7 +17,10 @@ function PriveteRountes({ component, isAdmin, ...props }) {
 
   return (
     <>
-      {!isAdmin && <Header />} <Route {...props} component={component} />
+      {!isAdmin && <Header />}
+      <div style={{ marginTop: isAdmin ? 0 : '72px' }}>
+        <Route {...props} component={component} />
+      </div>
     </>
   )
 }

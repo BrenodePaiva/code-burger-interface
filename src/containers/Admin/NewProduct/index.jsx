@@ -7,7 +7,7 @@ import ReactSelect from 'react-select'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
-import { ErrorMessage } from '../../../components'
+import { ErrorMessage, LoadScreen } from '../../../components'
 import paths from '../../../constants/paths'
 import api from '../../../services/api'
 import { ButtonStyles, Container, Input, Label, LabelUpload } from './styles'
@@ -15,6 +15,7 @@ import { ButtonStyles, Container, Input, Label, LabelUpload } from './styles'
 function NewProduct() {
   const [fileName, setFileName] = useState(null)
   const [categories, setCategories] = useState([])
+  const [load, setLoad] = useState(false)
   const { push } = useHistory()
 
   useEffect(() => {
@@ -54,19 +55,25 @@ function NewProduct() {
     productDataFormatData.append('file', data.file[0])
     productDataFormatData.append('category_id', data.category.id)
 
-    await toast.promise(api.post('products', productDataFormatData), {
-      pending: 'Criando novo produto...',
-      success: 'Produto criado com sucesso',
-      error: 'Falha ao criar o produto'
-    })
+    try {
+      setLoad(true)
+      await toast.promise(api.post('products', productDataFormatData), {
+        pending: 'Criando novo produto...',
+        success: 'Produto criado com sucesso',
+        error: 'Falha ao criar o produto'
+      })
 
-    setTimeout(() => {
-      push(paths.Products)
-    }, 900)
+      setTimeout(() => {
+        push(paths.Products)
+      }, 500)
+    } finally {
+      setLoad(false)
+    }
   }
 
   return (
     <Container>
+      {load && <LoadScreen />}
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div>
           <Label>Nome</Label>

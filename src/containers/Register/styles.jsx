@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 
 import Background from '../../assets/background.svg'
+import RegisterMobile from '../../assets/register-img-mobile.png'
+import RegisterImg from '../../assets/register-image.svg'
+import breakPoints from '../../styles/breakPoints'
 
 export const Container = styled.div`
   height: 100vh;
@@ -9,16 +12,36 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
 
-export const RegisterImage = styled.img`
-  height: 88%;
+  .image {
+    height: 96%;
+    width: 464.266px;
+    background-image: url('${RegisterImg}');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px 0 0 10px;
+  }
+
+  @media ${breakPoints.xbig} {
+    flex-direction: column;
+
+    .image {
+      height: 60px;
+      width: 404px;
+      background-image: url('${RegisterMobile}');
+      border-radius: 10px 10px 0 0;
+    }
+  }
+
+  @media ${breakPoints.xsmall} {
+    width: 98%;
+  }
 `
 
 export const ContainerItens = styled.div`
   border-radius: 0 10px 10px 0;
   background: #373737;
-  height: 88%;
+  height: 96%;
   padding: 25px 72px;
   display: flex;
   flex-direction: column;
@@ -36,6 +59,14 @@ export const ContainerItens = styled.div`
   form {
     display: flex;
     flex-direction: column;
+  }
+
+  @media ${breakPoints.xbig} {
+    border-radius: 0 0 10px 10px;
+  }
+
+  @media ${breakPoints.xsmall} {
+    width: 98%;
   }
 `
 

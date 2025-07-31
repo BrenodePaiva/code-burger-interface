@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import breakPoints from '../../styles/breakPoints'
 
 export const Container = styled.div`
   background-color: #e5e5e5;
@@ -32,7 +33,15 @@ export const ProductsContainer = styled.div`
   grid-template-columns: repeat(3, 390px);
   gap: 20px;
   padding: 40px;
-  justify-items: center;
+  align-items: center;
   justify-content: center;
   margin-top: 20px;
+
+  @media ${breakPoints.big} {
+    grid-template-columns: repeat(2, 390px);
+  }
+
+  @media ${breakPoints.xbig} {
+    grid-template-columns: repeat(1, 390px);
+  }
 `

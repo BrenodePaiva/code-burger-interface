@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 const CartContext = createContext({})
 
-export const CartProvaider = ({ children }) => {
+export const CartProvider = ({ children }) => {
   const [cartProducts, setCartProducts] = useState([])
+  const [cartQuantity, setCartQuantity] = useState(0)
 
   const updateLocalStorage = async product => {
     await localStorage.setItem(
@@ -13,22 +15,35 @@ export const CartProvaider = ({ children }) => {
     )
   }
 
+  const cleanCart = async () => {
+    await localStorage.removeItem('codeburger:cartProduct')
+  }
+
   const putProductInCart = async cartItens => {
     const cartIndex = cartProducts.findIndex(item => item.id === cartItens.id)
 
     let newCartProducts = []
     if (cartIndex >= 0) {
-      newCartProducts = cartProducts
-      newCartProducts[cartIndex].quantity =
-        newCartProducts[cartIndex].quantity + 1
-      setCartProducts(newCartProducts)
+      newCartProducts = [...cartProducts]
+      newCartProducts[cartIndex] = {
+        ...newCartProducts[cartIndex],
+        quantity: newCartProducts[cartIndex].quantity + 1
+      }
     } else {
       cartItens.quantity = 1
       newCartProducts = [...cartProducts, cartItens]
-      setCartProducts(newCartProducts)
     }
+    setCartProducts(newCartProducts)
 
-    await updateLocalStorage(newCartProducts)
+    await toast.promise(updateLocalStorage(newCartProducts), {
+      pending: 'Adicionando....',
+      success: 'Produto adicionado',
+      error: 'Erro ao adicionar Produto'
+    })
+    // putUserData(data)
+
+    // await updateLocalStorage(newCartProducts)
+    // toast.success('Produto adicionado')
   }
 
   const increaseProduct = async productId => {
@@ -69,6 +84,14 @@ export const CartProvaider = ({ children }) => {
   }
 
   useEffect(() => {
+    const totalItens = cartProducts.reduce(
+      (soma, item) => soma + item.quantity,
+      0
+    )
+    setCartQuantity(totalItens)
+  }, [cartProducts])
+
+  useEffect(() => {
     const loadCartProducts = async () => {
       const cart = await localStorage.getItem('codeburger:cartProduct')
 
@@ -86,7 +109,9 @@ export const CartProvaider = ({ children }) => {
         putProductInCart,
         cartProducts,
         increaseProduct,
-        decreaseProduct
+        decreaseProduct,
+        cartQuantity,
+        cleanCart
       }}
     >
       {children}
@@ -104,6 +129,6 @@ export const useCart = () => {
   return context
 }
 
-CartProvaider.propTypes = {
+CartProvider.propTypes = {
   children: PropTypes.node
 }

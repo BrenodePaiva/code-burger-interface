@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <AppProvaider>
       <Routes />
     </AppProvaider>
-    <ToastContainer position="top-center" autoClose={900} />
+    <ToastContainer position="top-center" autoClose={1200} />
     <GlobalStyles />
   </>
 )

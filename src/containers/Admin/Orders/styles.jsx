@@ -1,15 +1,16 @@
 import ReactSelect from 'react-select'
 import styled from 'styled-components'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
 export const Container = styled.div`
   background-color: #efefef;
-  min-height: 100vh;
 `
 
 export const Menu = styled.div`
   display: flex;
   justify-content: center;
-  gap: 50px;
+  flex-wrap: wrap;
+  gap: 10px 50px;
   margin: 20px 0;
 `
 
@@ -31,9 +32,18 @@ export const ProductImg = styled.img`
 `
 
 export const ReactSelectStyle = styled(ReactSelect)`
-  width: 250px;
+  width: 200px;
 
   .css-13cymwt-control {
     cursor: pointer;
   }
+`
+
+export const TrashStyled = styled(DeleteForeverIcon)`
+  color: red;
+  cursor: pointer;
+
+  /* .MuiSvgIcon-fontSizeMedium {
+    font-size: 100px;
+  } */
 `

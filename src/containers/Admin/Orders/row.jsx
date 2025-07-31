@@ -10,11 +10,14 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 
 import api from '../../../services/api'
 import status from './order-status'
-import { ProductImg, ReactSelectStyle } from './styles'
+import { ProductImg, ReactSelectStyle, TrashStyled } from './styles'
+import { toast } from 'react-toastify'
+import socket from '../../../services/socketService'
+import { LoadScreen } from '../../../components/LoadScreen'
 
 function Row({ row, setOrders, orders }) {
   const [open, setOpen] = React.useState(false)
@@ -25,13 +28,30 @@ function Row({ row, setOrders, orders }) {
     try {
       await api.put(`orders/${id}`, { status })
       const newOrders = orders.map(order => {
-        return order._id === id ? { ...order, status } : order
+        return order.id === id ? { ...order, status } : order
       })
+
       setOrders(newOrders)
     } catch (err) {
       console.error(err)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const delivered = useMemo(() => {
+    return row.status === 'Entregue'
+  }, [row])
+
+  const delOrder = async id => {
+    try {
+      await toast.promise(api.delete(`orders/${id}`), {
+        pending: 'Verificando....',
+        success: 'Pedido deletado',
+        error: 'Erro ao deletar o Pedido'
+      })
+    } catch (error) {
+      toast.error('Erro: ', error)
     }
   }
 
@@ -52,17 +72,29 @@ function Row({ row, setOrders, orders }) {
         </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.date}</TableCell>
-        <TableCell>
+        <TableCell
+          style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+        >
           <ReactSelectStyle
             options={status.filter(sts => sts.value !== 'Todos')}
             menuPortalTarget={document.body}
             placeholder="Status"
-            defaultValue={status.find(option => option.value === row.status)}
+            // defaultValue={status.find(option => option.value === row.status)}
+            value={status.find(option => option.value === row.status)}
             onChange={newStatus => {
               setNewStatus(row.orderId, newStatus.value)
             }}
             isLoading={isLoading}
           />
+
+          {delivered ? (
+            <TrashStyled
+              style={{ fontSize: '30px' }}
+              onClick={() => delOrder(row.orderId)}
+            />
+          ) : (
+            <div style={{ width: '30px' }}></div>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -75,22 +107,23 @@ function Row({ row, setOrders, orders }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Quantidade</TableCell>
-                    <TableCell>Produto</TableCell>
-                    <TableCell>Categoria</TableCell>
                     <TableCell></TableCell>
+                    <TableCell>Produto</TableCell>
+                    <TableCell>Quantidade</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.products.map(productRow => (
                     <TableRow key={productRow.id}>
+                      <TableCell>
+                        <ProductImg
+                          src={productRow.product.url}
+                          alt="produto-imagem"
+                        />
+                      </TableCell>
+                      <TableCell>{productRow.product.name}</TableCell>
                       <TableCell component="th" scope="row">
                         {productRow.quantity}
-                      </TableCell>
-                      <TableCell>{productRow.name}</TableCell>
-                      <TableCell>{productRow.category}</TableCell>
-                      <TableCell>
-                        <ProductImg src={productRow.url} alt="produto-imagem" />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -115,9 +148,11 @@ Row.propTypes = {
     products: PropTypes.arrayOf(
       PropTypes.shape({
         quantity: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired
+        product: PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          path: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired
+        })
       })
     ).isRequired
   }).isRequired

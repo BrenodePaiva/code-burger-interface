@@ -8,5 +8,5 @@ export function Button({ children, ...props }) {
 }
 
 Button.propTypes = {
-  children: PropTypes.string
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
 }

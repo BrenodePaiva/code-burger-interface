@@ -5,13 +5,19 @@ import { useCart } from '../../hooks/CartContext'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
 import { Button } from '../Button'
-import { Container } from './styles'
+import { Container, Warp } from './styles'
+import { useUser } from '../../hooks/UserContext'
+import { LoadScreen } from '../LoadScreen'
+import { useHistory } from 'react-router-dom'
 
 export function CartResume() {
   const [finalPrice, setFinalPrice] = useState(0)
+  const [load, setLoad] = useState(false)
+  const history = useHistory()
   const [taxa] = useState(5)
 
-  const { cartProducts } = useCart()
+  const { cartProducts, cleanCart } = useCart()
+  const { userData } = useUser()
 
   useEffect(() => {
     const sumItems = cartProducts.reduce((acc, currency) => {
@@ -23,18 +29,34 @@ export function CartResume() {
 
   const submitOrder = async () => {
     const order = cartProducts.map(product => {
-      return { id: product.id, quantity: product.quantity }
+      return {
+        id: product.id,
+        quantity: product.quantity,
+        price: product.price
+      }
     })
 
-    await toast.promise(api.post('orders', { products: order }), {
-      pending: 'Realizando pedido...',
-      success: 'Pedido Realizado',
-      error: 'Falha ao teantar realizar o pedido, tente novamente'
-    })
+    try {
+      setLoad(true)
+
+      await toast.promise(
+        api.post('orders', { products: order, user: userData.id }),
+        {
+          pending: 'Realizando pedido...',
+          success: 'Pedido Realizado',
+          error: 'Falha ao teantar realizar o pedido, tente novamente'
+        }
+      )
+      cleanCart()
+      history.push('/meus-pedidos')
+    } finally {
+      setLoad(false)
+    }
   }
 
   return (
-    <div>
+    <Warp>
+      {load && <LoadScreen />}
       <Container>
         <div className="container-top">
           <h2 className="title">Resumo do pedido</h2>
@@ -53,6 +75,6 @@ export function CartResume() {
       <Button style={{ width: '100%', marginTop: 30 }} onClick={submitOrder}>
         Finalizar pedido
       </Button>
-    </div>
+    </Warp>
   )
 }

@@ -1,25 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import Logo from '../../assets/logo.svg'
-import RegisterImg from '../../assets/register-image.svg'
 import { Button, ErrorMessage } from '../../components'
+import { useUser } from '../../hooks/UserContext'
 import api from '../../services/api'
-import {
-  Container,
-  RegisterImage,
-  ContainerItens,
-  Label,
-  Input,
-  SignInLink
-} from './styles'
+import { Container, ContainerItens, Label, Input, SignInLink } from './styles'
 
 export function Register() {
-  const [imgLoad, setImgLoad] = useState(false)
+  const { userData } = useUser()
+  const history = useHistory()
+
   const schema = Yup.object().shape({
     name: Yup.string().required('O nome é obrigatório'),
     email: Yup.string()
@@ -67,60 +62,61 @@ export function Register() {
     }
   }
 
-  const onLoad = () => {
-    setImgLoad(true)
-  }
+  useEffect(() => {
+    if (userData.token) {
+      history.push('/')
+    }
+  }, [])
 
   return (
     <Container>
-      <RegisterImage src={RegisterImg} alt="Imagem-burger" onLoad={onLoad} />
-      {imgLoad && (
-        <ContainerItens>
-          <img src={Logo} alt="logo-code-burger" />
-          <h1>Cadastre-se</h1>
+      <div className="image"></div>
 
-          <form noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Label className={errors.name?.message}>Nome</Label>
-            <Input {...register('name')} className={errors.name?.message} />
-            <ErrorMessage>{errors.name?.message}</ErrorMessage>
+      <ContainerItens>
+        <img src={Logo} alt="logo-code-burger" />
+        <h1>Cadastre-se</h1>
 
-            <Label className={errors.name?.message}>E-mail</Label>
-            <Input
-              type="email"
-              {...register('email')}
-              className={errors.email?.message}
-            />
-            <ErrorMessage>{errors.email?.message}</ErrorMessage>
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Label className={errors.name?.message}>Nome</Label>
+          <Input {...register('name')} className={errors.name?.message} />
+          <ErrorMessage>{errors.name?.message}</ErrorMessage>
 
-            <Label className={errors.name?.message}>Senha</Label>
-            <Input
-              type="password"
-              {...register('password')}
-              className={errors.password?.message}
-            />
-            <ErrorMessage>{errors.password?.message}</ErrorMessage>
+          <Label className={errors.name?.message}>E-mail</Label>
+          <Input
+            type="email"
+            {...register('email')}
+            className={errors.email?.message}
+          />
+          <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-            <Label className={errors.name?.message}>Confirmar Senha</Label>
-            <Input
-              type="password"
-              {...register('confirmPassword')}
-              className={errors.confirmPassword?.message}
-            />
-            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+          <Label className={errors.name?.message}>Senha</Label>
+          <Input
+            type="password"
+            {...register('password')}
+            className={errors.password?.message}
+          />
+          <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-            <Button type="submit" style={{ margin: '25px 0' }}>
-              Sign Up
-            </Button>
-          </form>
+          <Label className={errors.name?.message}>Confirmar Senha</Label>
+          <Input
+            type="password"
+            {...register('confirmPassword')}
+            className={errors.confirmPassword?.message}
+          />
+          <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
 
-          <SignInLink>
-            Já possui conta?{' '}
-            <Link to="/login" style={{ color: '#fff' }}>
-              Sign In
-            </Link>
-          </SignInLink>
-        </ContainerItens>
-      )}
+          <Button type="submit" style={{ margin: '25px 0' }}>
+            Sign Up
+          </Button>
+        </form>
+
+        <SignInLink>
+          Já possui conta?{' '}
+          <Link to="/login" style={{ color: '#fff' }}>
+            Sign In
+          </Link>
+        </SignInLink>
+      </ContainerItens>
     </Container>
   )
 }

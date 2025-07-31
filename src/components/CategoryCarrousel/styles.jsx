@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import breakPoints from '../../styles/breakPoints'
 
 export const Container = styled.div`
   background-color: #efefef;
@@ -10,11 +11,25 @@ export const Container = styled.div`
   padding: 35px 0;
 
   .rec.rec-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #9758a6;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     border: 1px solid #9758a6;
-
     color: #efefef;
+
+    @media ${breakPoints.xbig} {
+      min-width: 38px;
+      height: 38px;
+      font-size: 20px;
+    }
+
+    @media ${breakPoints.xmedium} {
+      min-width: 30px;
+      height: 36px;
+      font-size: 16px;
+    }
   }
 
   .rec.rec-arrow:hover {
@@ -34,7 +49,15 @@ export const Container = styled.div`
   }
 `
 
-export const CategoryImg = styled.img``
+export const CategoryImg = styled.img`
+  @media ${breakPoints.xbig} {
+    height: 58px;
+  }
+
+  @media ${breakPoints.xmedium} {
+    height: 45px;
+  }
+`
 
 export const ContainerItens = styled.div`
   display: flex;

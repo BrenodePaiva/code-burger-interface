@@ -5,39 +5,83 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import api from '../../../services/api'
 import formatDate from '../../../utils/formatDate'
 import status from './order-status'
 import Row from './row'
+
 import { Container, LinkMenu, Menu } from './styles'
+import socket from '../../../services/socketService'
 
 function Orders() {
   const [orders, setOrders] = useState([])
-  const [rows, setRows] = useState([])
+  const [items, setItems] = useState([])
   const [filteredOrders, setFilteredOrders] = useState([])
   const [activeStatus, setActiveStatus] = useState(1)
+  const hasInitialized = useRef(false)
 
   useEffect(() => {
     async function loadOrders() {
-      const { data } = await api.get('orders')
+      const { data } = await api.get(`orders/${0}`)
+      setOrders(data.allOrders)
+      setItems(data.items)
+      console.log(data)
 
-      setOrders(data)
-      setFilteredOrders(data)
+      if (!hasInitialized.current) {
+        hasInitialized.current = true
+
+        socket.emit('join-room', 'kitchen')
+
+        socket.on('new-order', ({ order, items }) => {
+          console.log('New Order: ', { order, items })
+
+          setOrders(prevOrder => [order, ...prevOrder])
+          setItems(prevItems => [...items, ...prevItems])
+        })
+
+        socket.on('updated-all-order', updateOrder => {
+          console.log('Updated order: ', updateOrder)
+
+          setOrders(prev =>
+            prev.map(ord =>
+              ord.id === updateOrder.id ? { ...ord, ...updateOrder } : ord
+            )
+          )
+        })
+
+        socket.on('delete-order', id => {
+          console.log('Deleted Order: ', id)
+
+          setOrders(prevOrder => prevOrder.filter(order => order.id !== id))
+        })
+      }
+
+      return () => {
+        socket.off('new-order')
+        socket.off('updated-all-order')
+        socket.off('delete-order')
+      }
     }
-
     loadOrders()
   }, [])
 
-  function createData(order) {
+  console.log(orders)
+
+  function createData(order, items) {
     return {
+      orderId: order.id,
       name: order.user.name,
-      orderId: order._id,
       date: formatDate(order.createdAt),
       status: order.status,
-      products: order.products
+      products: items
     }
+  }
+
+  function filterItems(id) {
+    const orderItems = items.filter(item => item.order_id === id)
+    return orderItems
   }
 
   function handleStatus(status) {
@@ -50,9 +94,8 @@ function Orders() {
     setActiveStatus(status.id)
   }
 
-  useEffect(() => {
-    const newRows = filteredOrders.map(ord => createData(ord))
-    setRows(newRows)
+  const rows = useMemo(() => {
+    return filteredOrders.map(ord => createData(ord, filterItems(ord.id)))
   }, [filteredOrders])
 
   useEffect(() => {
@@ -65,7 +108,6 @@ function Orders() {
       )
       setFilteredOrders(newFilteredOrders)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders])
 
   return (
