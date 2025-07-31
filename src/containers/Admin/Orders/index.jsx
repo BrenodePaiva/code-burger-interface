@@ -27,7 +27,6 @@ function Orders() {
       const { data } = await api.get(`orders/${0}`)
       setOrders(data.allOrders)
       setItems(data.items)
-      console.log(data)
 
       if (!hasInitialized.current) {
         hasInitialized.current = true
@@ -35,15 +34,11 @@ function Orders() {
         socket.emit('join-room', 'kitchen')
 
         socket.on('new-order', ({ order, items }) => {
-          console.log('New Order: ', { order, items })
-
           setOrders(prevOrder => [order, ...prevOrder])
           setItems(prevItems => [...items, ...prevItems])
         })
 
         socket.on('updated-all-order', updateOrder => {
-          console.log('Updated order: ', updateOrder)
-
           setOrders(prev =>
             prev.map(ord =>
               ord.id === updateOrder.id ? { ...ord, ...updateOrder } : ord
@@ -52,8 +47,6 @@ function Orders() {
         })
 
         socket.on('delete-order', id => {
-          console.log('Deleted Order: ', id)
-
           setOrders(prevOrder => prevOrder.filter(order => order.id !== id))
         })
       }
@@ -66,8 +59,6 @@ function Orders() {
     }
     loadOrders()
   }, [])
-
-  console.log(orders)
 
   function createData(order, items) {
     return {

@@ -37,7 +37,6 @@ export function MyOrder() {
 
       // Escuta atualização de pedido
       socket.on('updated-order', orderUpdated => {
-        console.log('🔄 Updated recived:', orderUpdated)
         // Atualizar o estado, UI, notificação, etc.
         setOrders(prev =>
           prev.map(ord =>

@@ -53,8 +53,6 @@ export function UserEdit() {
   }, [userData])
 
   const onSubmit = async data => {
-    console.log(data)
-    console.log(userData)
     try {
       setLoad(true)
       const { status } = await api.put(`users/${userData.email}`, data, {
