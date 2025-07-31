@@ -8,10 +8,20 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
 *.local
 .env
+
+.yarn
+public/
+src/
+.eslintrc.json
+.prettierrc
+.yarnrc.yml
+index.html
+package.json
+README.md
+vite.config.js
+yarn.lock
 
 # Editor directories and files
 .vscode/*
