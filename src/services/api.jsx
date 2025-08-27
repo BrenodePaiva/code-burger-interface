@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiCodeBurger = axios.create({
-  baseURL: import.meta.env.VITE_API
+  baseURL: 'https://api-code-burger-online.onrender.com' // import.meta.env.VITE_API
 })
 
 apiCodeBurger.interceptors.request.use(async config => {
