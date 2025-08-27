@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Background from '../../assets/background.svg'
 import breakPoints from '../../styles/breakPoints'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import CancelIcon from '@mui/icons-material/Cancel'
 
 export const Container = styled.div`
   height: 100vh;
@@ -84,6 +85,9 @@ export const ContainerMessage = styled.div`
 
 export const CheckStyled = styled(CheckCircleIcon)`
   color: #228822;
+`
+export const CancelStyled = styled(CancelIcon)`
+  color: #cc1717;
 `
 
 export const SignInLink = styled.div`

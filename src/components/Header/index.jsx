@@ -91,7 +91,13 @@ export function Header() {
         </NavBurgue>
         <NavMobile data-is-mobile={mobile}>
           <PageLink>
-            <IconButton aria-label="cart" onClick={() => push('/carrinho')}>
+            <IconButton
+              aria-label="cart"
+              onClick={() => {
+                push('/carrinho')
+                setMobile(false)
+              }}
+            >
               <StyledBadge badgeContent={cartQuantity} color="secondary">
                 <ShoppingCartIcon
                   style={{ color: '#9758a6', fontSize: '28px' }}
@@ -124,6 +130,7 @@ export function Header() {
             onClick={() => {
               push('/user-edit')
               setOpenBox(false)
+              setMobile(false)
             }}
             data-is-active={pathname.includes('user-edit')}
           >
@@ -134,6 +141,7 @@ export function Header() {
             onClick={() => {
               push('/meus-pedidos')
               setOpenBox(false)
+              setMobile(false)
             }}
           >
             <ShoppingBagIcon /> <p>Meus Pedidos</p>

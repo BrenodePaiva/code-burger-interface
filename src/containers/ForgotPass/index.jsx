@@ -17,7 +17,8 @@ import {
   Input,
   SignInLink,
   ContainerMessage,
-  CheckStyled
+  CheckStyled,
+  CancelStyled
 } from './styles'
 
 export function ForgotPass() {
@@ -91,7 +92,7 @@ export function ForgotPass() {
             </p>
 
             <SignInLink>
-              <Link>Voltar para o login</Link>
+              <Link to="/login">Voltar para o login</Link>
             </SignInLink>
 
             <CheckStyled />
@@ -108,10 +109,10 @@ export function ForgotPass() {
             <h2>Algo deu errado</h2>
 
             <SignInLink>
-              <Link>Voltar para o login</Link>
+              <Link to="/login">Voltar para o login</Link>
             </SignInLink>
 
-            <CheckStyled />
+            <CancelStyled />
           </ContainerMessage>
         </ContainerItens>
       </Container>

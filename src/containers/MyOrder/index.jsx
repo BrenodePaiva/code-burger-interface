@@ -87,6 +87,8 @@ export function MyOrder() {
         </PopUp>
       )}
 
+      {orders.length === 0 && <h1>Você não tem pedidos</h1>}
+
       {orders.map(order => (
         <ContentOrder
           onClick={() => {
